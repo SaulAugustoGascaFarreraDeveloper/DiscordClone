@@ -13,3 +13,12 @@ export const channelFormSchema = z.object({
     }),
     type: z.nativeEnum(ChannelType)
 })
+
+export const chatFormSchema = z.object({
+    content: z.string().min(1)
+})
+
+
+export const messageFileSchema = z.object({
+    fileUrl: z.string().min(1,{message:"Image file is required"})
+})

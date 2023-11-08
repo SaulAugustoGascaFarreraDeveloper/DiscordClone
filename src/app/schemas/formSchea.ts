@@ -22,3 +22,7 @@ export const chatFormSchema = z.object({
 export const messageFileSchema = z.object({
     fileUrl: z.string().min(1,{message:"Image file is required"})
 })
+
+export const editFormSchema = z.object({
+    content: z.string().min(1)
+})

@@ -5,6 +5,12 @@ import ChatWelcome from "./chat-welcome";
 import { useChatQuery } from "../../../hooks/use-chat-query";
 import { Loader2, ServerCrash } from "lucide-react";
 import { Fragment } from "react";
+import ChatItem from "./chat-item";
+import {format} from "date-fns"
+import { date } from "zod";
+
+
+const DATE_FORMAT = "d MMM yyy, HH:mm"
 
 
 type MessageWithMemberWithProfile = Message & {
@@ -26,6 +32,8 @@ interface ChatMessagesProps{
 }
 
 const ChatMessages = ({name,member,chatId,apiUrl,socketUrl,socketQuery,paramKey,paramValue,type}:ChatMessagesProps) => {
+
+    
 
     const queryKey = `chat:${chatId}`
 
@@ -68,9 +76,23 @@ const ChatMessages = ({name,member,chatId,apiUrl,socketUrl,socketQuery,paramKey,
                         {data?.pages.map((group,groupIndex) => (
                             <Fragment key={groupIndex}>
                                 {group.items.map((message: MessageWithMemberWithProfile) => (
-                                    <div key={message.id}>
-                                        {message.content}
-                                    </div>
+                                    // <div key={message.id}>
+                                    //     {message.content}
+                                    // </div>
+
+                                    <ChatItem
+                                        key={message.id}
+                                        id={message.id}
+                                        currentMember={member}
+                                        member={message.member}
+                                        content={message.content}
+                                        fileUrl={message.fileUrl}
+                                        deleted={message.deleted}
+                                        timestamp={format(new Date(message.createdAt),DATE_FORMAT)}
+                                        isUpdated={message.updatedAt !== message.createdAt}
+                                        socketUrl={socketUrl}
+                                        socketQuery={socketQuery}
+                                    />
                                 ))}
                             </Fragment>
                         ))}

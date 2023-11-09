@@ -16,6 +16,7 @@ import { Form, FormControl, FormField, FormItem } from "../ui/form"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import axios from "axios"
+import { useModal } from "../../../hooks/use-modal-store"
 
 
 const roleIconMap = {
@@ -47,7 +48,8 @@ const ChatItem = ({id,content,member,timestamp,fileUrl,deleted,currentMember,isU
     const [isLoading,setIsloading] = useState<boolean>(false)
 
     const [isEditing,setIsEditing] = useState<boolean>(false)
-    const [isDeleting,setIsDeleting] = useState<boolean>(false)
+    
+    const {onOpen} = useModal()
 
     useEffect(() => {
 
@@ -85,6 +87,10 @@ const ChatItem = ({id,content,member,timestamp,fileUrl,deleted,currentMember,isU
             })
 
             await axios.patch(url,values)
+
+            form.reset()
+
+            setIsEditing(false)
 
         }catch(error)
         {
@@ -248,7 +254,10 @@ const ChatItem = ({id,content,member,timestamp,fileUrl,deleted,currentMember,isU
                                 )
                             }
                             <ActionTooltip label="Delete">
-                                            <Trash onClick={() => setIsDeleting(true)} className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 
+                                            <Trash onClick={() => onOpen("deleteMessage",{
+                                                apiUrl: `${socketUrl}/${id}`,
+                                                query: socketQuery
+                                            })} className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 
                                             hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-500 transition" />
                             </ActionTooltip>
                         </div>
